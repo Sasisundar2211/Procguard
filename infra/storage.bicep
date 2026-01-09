@@ -1,0 +1,2 @@
+allowBlobPublicAccess: false
+publicNetworkAccess: 'Disabled'

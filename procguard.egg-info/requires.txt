@@ -1,0 +1,9 @@
+alembic==1.13.1
+sqlalchemy==2.0.25
+psycopg2-binary==2.9.9
+pg8000
+python-dotenv
+openai
+
+[dev]
+pytest==9.0.2
