@@ -10,10 +10,14 @@
             "use": "@vercel/next"
         }
     ],
-    "rewrites": [
+    "routes": [
         {
-            "source": "/api/(.*)",
-            "destination": "/app/main.py"
+            "src": "/api/(.*)",
+            "dest": "/app/main.py"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/procguard-ui/$1"
         }
     ]
 }
