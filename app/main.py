@@ -45,7 +45,7 @@ def root():
 # PHASE 2 - FIX: Add CORS middleware FIRST (ORDER MATTERS)
 ALLOWED_ORIGINS = os.getenv(
     "CORS_ALLOWED_ORIGINS",
-    "http://localhost:3000,http://127.0.0.1:3000,https://procguard-ui.azurestaticapps.net"
+    "http://localhost:3000,http://127.0.0.1:3000,https://procguard.vercel.app,https://procguard-ui.livelyrock-e2ae864f.swedencentral.azurecontainerapps.io"
 ).split(",")
 
 app.add_middleware(
