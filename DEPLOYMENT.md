@@ -16,7 +16,7 @@ This guide provides comprehensive instructions for deploying both the frontend a
 Deploy both frontend and backend together on your local machine using Docker Compose.
 
 ### Prerequisites
-- Docker and Docker Compose installed
+- Docker and Docker Compose V2 installed
 - At least 4GB of RAM available
 - Ports 3000, 8000, and 5432 available
 
@@ -34,9 +34,9 @@ Deploy both frontend and backend together on your local machine using Docker Com
    ./deploy.sh --mode local
    ```
 
-   Or manually with docker-compose:
+   Or manually with docker compose:
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 3. **Access the application**
@@ -46,12 +46,12 @@ Deploy both frontend and backend together on your local machine using Docker Com
 
 4. **View logs**
    ```bash
-   docker-compose logs -f
+   docker compose logs -f
    ```
 
 5. **Stop services**
    ```bash
-   docker-compose down
+   docker compose down
    ```
 
 ---
@@ -101,7 +101,7 @@ Deploy to production using Docker Compose with Nginx as a reverse proxy.
 
    Or manually:
    ```bash
-   docker-compose -f docker-compose.prod.yml up -d
+   docker compose -f docker-compose.prod.yml up -d
    ```
 
 3. **Access the application**
@@ -226,23 +226,23 @@ NGINX_PORT=80
 docker ps -a
 
 # Check logs
-docker-compose logs
+docker compose logs
 
 # Check specific service
-docker-compose logs backend
-docker-compose logs frontend
+docker compose logs backend
+docker compose logs frontend
 ```
 
 ### Database connection issues
 ```bash
 # Check if PostgreSQL is running
-docker-compose ps postgres
+docker compose ps postgres
 
 # Check database logs
-docker-compose logs postgres
+docker compose logs postgres
 
 # Connect to database
-docker-compose exec postgres psql -U postgres -d procguard
+docker compose exec postgres psql -U postgres -d procguard
 ```
 
 ### Frontend can't connect to backend
@@ -263,19 +263,19 @@ lsof -i :5432
 ### Rebuild after code changes
 ```bash
 # Local
-docker-compose down
-docker-compose build
-docker-compose up -d
+docker compose down
+docker compose build
+docker compose up -d
 
 # Production
-docker-compose -f docker-compose.prod.yml down
-docker-compose -f docker-compose.prod.yml build --no-cache
-docker-compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml down
+docker compose -f docker-compose.prod.yml build --no-cache
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 ### Clean slate (removes all data)
 ```bash
-docker-compose down -v
+docker compose down -v
 docker system prune -a
 ```
 
@@ -291,15 +291,15 @@ docker system prune -a
 ### Logs
 ```bash
 # All services
-docker-compose logs -f
+docker compose logs -f
 
 # Specific service
-docker-compose logs -f backend
-docker-compose logs -f frontend
-docker-compose logs -f postgres
+docker compose logs -f backend
+docker compose logs -f frontend
+docker compose logs -f postgres
 
 # Last 100 lines
-docker-compose logs --tail=100 backend
+docker compose logs --tail=100 backend
 ```
 
 ### Resource Usage
@@ -313,20 +313,20 @@ docker stats
 
 ### Backup Database
 ```bash
-docker-compose exec postgres pg_dump -U postgres procguard > backup.sql
+docker compose exec postgres pg_dump -U postgres procguard > backup.sql
 ```
 
 ### Restore Database
 ```bash
-docker-compose exec -T postgres psql -U postgres procguard < backup.sql
+docker compose exec -T postgres psql -U postgres procguard < backup.sql
 ```
 
 ### Update Application
 ```bash
 git pull
-docker-compose down
-docker-compose build
-docker-compose up -d
+docker compose down
+docker compose build
+docker compose up -d
 ```
 
 ---
@@ -348,7 +348,7 @@ docker-compose up -d
 
 For issues and questions:
 1. Check the [Troubleshooting](#troubleshooting) section
-2. Review logs: `docker-compose logs`
+2. Review logs: `docker compose logs`
 3. Check GitHub Issues
 4. Consult the API documentation at `/api/docs`
 

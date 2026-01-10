@@ -57,16 +57,16 @@ case $MODE in
             exit 1
         fi
         
-        # Check if docker-compose is available
-        if ! command -v docker-compose &> /dev/null; then
-            echo "❌ docker-compose is not installed. Please install it and try again."
+        # Check if docker compose is available
+        if ! docker compose version &> /dev/null; then
+            echo "❌ docker compose is not available. Please install Docker Compose and try again."
             exit 1
         fi
         
-        echo "📦 Building and starting services with docker-compose..."
-        docker-compose down -v
-        docker-compose build
-        docker-compose up -d
+        echo "📦 Building and starting services with docker compose..."
+        docker compose down -v
+        docker compose build
+        docker compose up -d
         
         echo ""
         echo "✅ Deployment complete!"
@@ -77,8 +77,8 @@ case $MODE in
         echo "  - API Docs: http://localhost:8000/docs"
         echo "  - Database: localhost:5432"
         echo ""
-        echo "To view logs: docker-compose logs -f"
-        echo "To stop services: docker-compose down"
+        echo "To view logs: docker compose logs -f"
+        echo "To stop services: docker compose down"
         ;;
         
     prod)
@@ -116,9 +116,9 @@ EOF
         export $(cat .env.prod | grep -v '^#' | xargs)
         
         echo "📦 Building and starting production services..."
-        docker-compose -f docker-compose.prod.yml down -v
-        docker-compose -f docker-compose.prod.yml build
-        docker-compose -f docker-compose.prod.yml up -d
+        docker compose -f docker-compose.prod.yml down -v
+        docker compose -f docker-compose.prod.yml build
+        docker compose -f docker-compose.prod.yml up -d
         
         echo ""
         echo "✅ Production deployment complete!"
@@ -128,8 +128,8 @@ EOF
         echo "  - Frontend (direct): http://localhost:${FRONTEND_PORT:-3000}"
         echo "  - Backend API (via nginx): http://localhost:${NGINX_PORT:-80}/api"
         echo ""
-        echo "To view logs: docker-compose -f docker-compose.prod.yml logs -f"
-        echo "To stop services: docker-compose -f docker-compose.prod.yml down"
+        echo "To view logs: docker compose -f docker-compose.prod.yml logs -f"
+        echo "To stop services: docker compose -f docker-compose.prod.yml down"
         ;;
         
     azure)
