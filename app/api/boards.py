@@ -89,9 +89,9 @@ def get_boards(db: Session = Depends(get_db)):
         BoardResponse(
             id="sys-evidence",
             title="Audit Evidence",
-            description="cryptographic Evidence Chain",
+            description="Cryptographic Evidence Chain",
             color="bg-emerald-600",
-            href="/audit", # Or /evidence
+            href="/system/audit-logs",
             primary_label="Items",
             primary_count=evidence_count,
             secondary_label="Reviews",

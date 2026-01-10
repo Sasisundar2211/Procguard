@@ -1,35 +1,20 @@
-
-FROM python:3.12-slim AS builder
-
+FROM node:20-alpine AS builder
 WORKDIR /app
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-RUN echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
-
-
-FROM python:3.12-slim
-
-WORKDIR /app
-
-RUN groupadd -r procguard && useradd -r -g procguard procguard
-
-COPY --from=builder /install /usr/local
-
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+RUN npm run build
 
-RUN chown -R procguard:procguard /app
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/next.config.ts ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/.next/standalone ./
 
-USER procguard
-
-EXPOSE 8000
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+EXPOSE 3000
+CMD ["node", "server.js"]

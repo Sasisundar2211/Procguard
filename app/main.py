@@ -1,9 +1,11 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
-from fastapi.middleware.cors import CORSMiddleware
+import sys
 import os
 
-from app.api import batches, events, procedures, audit_timeline, compliance, boards
+# Add the project root to sys.path so we can import 'app'
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from app.main import app
+
 from app.api import regulatory_audit as audit, violations, opa, dashboard, execution_routes, evidence
 from app.core.database import engine, init_db
 from app.models.base import Base

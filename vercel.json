@@ -1,23 +1,8 @@
 {
-    "version": 2,
-    "builds": [
+    "rewrites": [
         {
-            "src": "app/main.py",
-            "use": "@vercel/python"
-        },
-        {
-            "src": "procguard-ui/package.json",
-            "use": "@vercel/next"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "/app/main.py"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/procguard-ui/$1"
+            "source": "/api/(.*)",
+            "destination": "/api"
         }
     ]
 }
