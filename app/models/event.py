@@ -7,6 +7,8 @@ from sqlalchemy import TIMESTAMP
 from .base import Base
 from .batch import Batch
 
+from sqlalchemy import Index, text
+
 class BatchEvent(Base):
     __tablename__ = "batch_events"
 
@@ -17,3 +19,13 @@ class BatchEvent(Base):
     occurred_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), nullable=False, default=datetime.utcnow)
 
     batch: Mapped["Batch"] = relationship("Batch")
+
+    __table_args__ = (
+        Index(
+            "one_approval_per_step",
+            batch_id,
+            text("(payload->>'step_id')"),
+            unique=True,
+            postgresql_where=text("event_type = 'approve_step'")
+        ),
+    )

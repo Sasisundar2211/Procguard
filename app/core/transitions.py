@@ -17,6 +17,7 @@ from app.models.violation import Violation
 from app.models.audit import AuditLog
 from app.security.rbac import authorize_event
 from app.security.roles import Role
+import uuid
 
 def execute_transition(
     *,
@@ -171,7 +172,6 @@ def execute_transition(
     batch.current_state = next_state.value
 
     from app.core.crypto import canonical_hash
-    import uuid
 
     db.add(
         BatchEvent(

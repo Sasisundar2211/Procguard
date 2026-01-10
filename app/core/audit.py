@@ -26,6 +26,12 @@ def write_audit_log(
     }
     a_hash = canonical_hash(payload)
 
+    import os
+    default_project_id = os.getenv("DEFAULT_PROJECT_ID", "550e8400-e29b-41d4-a716-446655440000")
+    project_id = metadata.get("project_id", default_project_id)
+    if isinstance(project_id, str):
+        project_id = uuid.UUID(project_id)
+
     # 4. Create AuditLog entry
     audit_log = AuditLog(
         id=uuid.uuid4(),
@@ -38,7 +44,7 @@ def write_audit_log(
         timestamp=datetime.now(timezone.utc),
         payload=payload,
         source="SYSTEM",
-        project_id=uuid.UUID("550e8400-e29b-41d4-a716-446655440000"),
+        project_id=project_id,
         client_id="API",
         created_at=datetime.now(timezone.utc),
         audit_hash=a_hash

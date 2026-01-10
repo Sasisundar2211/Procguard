@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 AI_ENABLED = os.getenv("AI_ENABLED", "false").lower() == "true"

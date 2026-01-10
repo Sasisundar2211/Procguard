@@ -3,8 +3,8 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-from app.api import batches, events, procedures, audit_timeline, compliance, boards
-from app.api import audit, violations, opa, dashboard, execution_routes
+from app.api import batches, events, procedures, audit_timeline, compliance
+from app.api import regulatory_audit as audit, violations, opa, dashboard, execution_routes, evidence
 from app.core.database import engine, init_db
 from app.models.base import Base
 from contextlib import asynccontextmanager
@@ -38,6 +38,10 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+@app.get("/")
+def root():
+    return {"message": "ProcGuard API is running. Access /docs for API documentation."}
+
 # PHASE 2 - FIX: Add CORS middleware FIRST (ORDER MATTERS)
 ALLOWED_ORIGINS = os.getenv(
     "CORS_ALLOWED_ORIGINS",
@@ -70,8 +74,8 @@ app.include_router(compliance.router, prefix="/compliance", tags=["compliance"])
 app.include_router(violations.router)
 app.include_router(opa.router, prefix="/opa", tags=["opa"])
 app.include_router(dashboard.router)
-app.include_router(boards.router)
 app.include_router(execution_routes.router)
+app.include_router(evidence.router, tags=["evidence"])
 
 # Exception Handler for global safety
 @app.exception_handler(Exception)

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, Query
 from sqlalchemy.orm import Session
 from app.api.deps import get_db
 from app.models.compliance import ComplianceReport, ComplianceEvidence
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 import uuid
 from datetime import datetime
@@ -15,8 +15,7 @@ class EvidenceSchema(BaseModel):
     evidence_type: str
     created_at: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ComplianceReportSchema(BaseModel):
     id: uuid.UUID
@@ -24,8 +23,7 @@ class ComplianceReportSchema(BaseModel):
     created_at: datetime
     evidence: List[EvidenceSchema]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class CreateReportRequest(BaseModel):
     title: str

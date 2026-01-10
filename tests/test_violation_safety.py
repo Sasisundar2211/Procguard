@@ -2,6 +2,7 @@ import pytest
 from uuid import uuid4
 from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
+from datetime import datetime
 from app.main import app
 from app.api.deps import get_db
 from app.models.violation import Violation
@@ -31,12 +32,21 @@ def test_violation_integrity_failure_returns_409():
     Forensic Check: Violation without a batch (Orphan) must return 409.
     """
     violation_id = uuid4()
+    batch_id = uuid4()
     
-    # Mock a violation that has no 'batch' relationship
-    mock_violation = MagicMock(spec=Violation)
-    mock_violation.id = violation_id
-    mock_violation.batch = None # Orphaned
+    # Use a real model object to satisfy Pydantic validation
+    mock_violation = Violation(
+        id=violation_id,
+        batch_id=batch_id,
+        rule="STEP_ORDER_VIOLATION",
+        detected_at=datetime.utcnow(),
+        status="OPEN",
+        payload={"reason": "mock"}
+    )
+    # Simulate orphan
+    mock_violation.batch = None
     
+    # We need to mock the query return
     mock_db = MagicMock()
     mock_db.query().filter().first.return_value = mock_violation
     

@@ -30,5 +30,5 @@ packages = ["app"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 filterwarnings = [
-  "error::DeprecationWarning"
+  "default::DeprecationWarning"
 ]

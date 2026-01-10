@@ -73,6 +73,10 @@ def get_violation(
     if not violation:
         raise HTTPException(status_code=404, detail="Violation record not found in forensic store")
 
+    # Forensic Integrity Check: orphaned violations are invalid
+    if not violation.batch:
+         raise HTTPException(status_code=409, detail="Integrity Failure: Violation is orphaned from its controlling batch")
+
     # Enterprise Pattern: Derived Read Model (Immutable)
     # We hydrate the response object dynamically without mutating the underlying immutable record.
     response = ViolationResponse.model_validate(violation)

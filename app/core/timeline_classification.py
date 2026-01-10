@@ -90,6 +90,6 @@ def compute_eos_status(
             if not dev_resolved and not dev_superseded:
                 return "DEVIATION", str(dev_id)
             if dev_resolved:
-                return "RESOLVED", str(dev_id)
+                return "EOS", None
 
     return "EOS", None
