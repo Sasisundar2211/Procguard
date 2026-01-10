@@ -4,9 +4,16 @@ import os
 # Add the project root to sys.path so we can import 'app'
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.main import app
 
-from app.api import regulatory_audit as audit, violations, opa, dashboard, execution_routes, evidence
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+
+
+from app.api import (
+    regulatory_audit as audit, violations, opa, dashboard, execution_routes, evidence,
+    batches, events, procedures, audit_timeline, compliance, boards
+)
 from app.core.database import engine, init_db
 from app.models.base import Base
 from contextlib import asynccontextmanager
