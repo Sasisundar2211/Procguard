@@ -15,7 +15,8 @@ dependencies = [
     "python-dotenv",
     "openai",
     "fastapi",
-    "uvicorn"
+    "uvicorn",
+        "reportlab==4.0.9",
 ]
 
 [project.optional-dependencies]
