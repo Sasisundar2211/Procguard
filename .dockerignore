@@ -1,8 +1,81 @@
+# Node
 node_modules
 .next
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+.venv
+venv/
+.pytest_cache
+.coverage
+
+# Git
 .git
 .gitignore
-README.md
-Dockerfile
-.env*
+.gitattributes
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+*.md
+!DEPLOYMENT.md
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+
+# Logs
+*.log
+logs/
+backend.log
+server.log
+uvicorn*.log
+nohup.out
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Build artifacts
+build/
+dist/
+.cache/
+
+# Test
+tests/
+test/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# Misc
+.vercel
+.azure
+infra/
