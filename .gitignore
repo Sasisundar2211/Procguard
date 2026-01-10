@@ -8,3 +8,36 @@ dist/
 build/
 *.log
 .DS_Store
+
+# Database migrations (Alembic)
+alembic/
+alembic.ini
+
+# Testing
+tests/
+*.pyc
+
+# Build artifacts
+*.egg-info/
+procguard.egg-info/
+
+# Scripts and utilities
+scripts/
+apply_db_index.py
+check_db.py
+debug_db.py
+fix_data.py
+
+# Documentation (keep only essential docs in repo)
+docs/
+
+# Infrastructure
+infra/
+Dockerfile
+nohup.out
+
+# Audit and compliance docs
+*AUDIT*.md
+*COMPLIANCE*.md
+ARCH_*.md
+BOARDSGRID_AUDIT.md
