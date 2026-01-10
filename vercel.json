@@ -1,8 +1,22 @@
 {
+    "buildCommand": "npm run build",
+    "outputDirectory": ".next",
+    "framework": "nextjs",
+    "installCommand": "npm install",
+    "devCommand": "npm run dev",
     "rewrites": [
         {
             "source": "/api/:path*",
             "destination": "/api/index.py"
         }
-    ]
+    ],
+    "functions": {
+        "api/index.py": {
+            "runtime": "python3.9",
+            "maxDuration": 30
+        }
+    },
+    "env": {
+        "VERCEL": "1"
+    }
 }
