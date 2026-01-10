@@ -1,10 +1,31 @@
+# Environment Variables
 .env
+.env.local
+.env.*
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 .venv/
+venv/
+*.egg-info/
+
+# JavaScript / Next.js
 node_modules/
 dist/
 build/
+.next/
+out/
+coverage/
+
+# Vercel
+.vercel
+
+# System
 *.log
 .DS_Store
+
+# IDEs
+.vscode/
+.idea/

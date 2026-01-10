@@ -28,8 +28,40 @@ export interface ProcedureView {
     }[];
 }
 
-export async function getProcedures(): Promise<Procedure[]> {
-    const { data, error } = await apiFetch("/procedures/");
-    if (error) throw new Error(error);
-    return data;
+export type ProceduresResult =
+    | { status: "ok"; data: Procedure[] }
+    | { status: "error"; reason: string; data: null }
+    | { status: "offline"; reason: string; data: null };
+
+export async function getProcedures(): Promise<ProceduresResult> {
+    try {
+        const { data, error, status } = await apiFetch("/procedures/");
+
+        if (status === 503 || error === "circuit_open" || error === "network_failure") {
+            return {
+                status: "offline",
+                reason: "network_failure",
+                data: null,
+            };
+        }
+
+        if (error || !data) {
+            return {
+                status: "error",
+                reason: error || `HTTP_${status}`,
+                data: null,
+            };
+        }
+
+        return {
+            status: "ok",
+            data: data as Procedure[],
+        };
+    } catch (err) {
+        return {
+            status: "offline",
+            reason: "network_failure",
+            data: null,
+        };
+    }
 }

@@ -26,12 +26,13 @@ export function ApiHealthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const controller = new AbortController();
-    // 3 second timeout for the health check
+    // 10 second timeout for the health check
     const timeout = setTimeout(() => {
       controller.abort();
-    }, 3000);
+    }, 10000);
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+
     fetch(`${API_URL}/health`, {
       signal: controller.signal,
       cache: "no-store", // Ensure fresh check

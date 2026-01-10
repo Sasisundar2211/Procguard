@@ -11,7 +11,8 @@ from app.core.filter_audit import log_filter_event, verify_filter_chain
 from app.services.audit_service import generate_filter_audit_report
 from app.core.circuit_breaker import circuit_breaker
 
-router = APIRouter(prefix="/audit/regulatory", tags=["Regulatory Audit"])
+# Removed prefix to allow explicit paths matching frontend
+router = APIRouter(tags=["Regulatory Audit"])
 
 class AuditLogSchema(BaseModel):
     id: uuid.UUID
@@ -32,7 +33,7 @@ class AuditLogListResponse(BaseModel):
     items: List[AuditLogSchema]
     total: int
 
-@router.get("/logs", response_model=AuditLogListResponse)
+@router.get("/audit-logs", response_model=AuditLogListResponse)
 def get_audit_logs(
     db: Session = Depends(get_db),
     domain: str = Query("SYSTEM"),
@@ -43,7 +44,7 @@ def get_audit_logs(
     """
     Authoritative Forensic Audit Log Retrieval.
     """
-    endpoint = "/audit/regulatory/logs"
+    endpoint = "/audit-logs"
     if circuit_breaker.is_degraded(endpoint):
         return {"items": [], "total": 0}
 
@@ -69,7 +70,7 @@ class FilterEventRequest(BaseModel):
     screen: str
     filter_payload: dict
 
-@router.post("/filter-events")
+@router.post("/audit/filter-events")
 def create_filter_event(
     req: FilterEventRequest,
     db: Session = Depends(get_db),
@@ -79,14 +80,14 @@ def create_filter_event(
     log = log_filter_event(db, actor_id, req.screen, req.filter_payload)
     return {"status": "ok", "id": str(log.id)}
 
-@router.get("/filter-events/verify")
+@router.get("/audit/filter-events/verify")
 def verify_filter_logs(db: Session = Depends(get_db)):
     result = verify_filter_chain(db)
     if not result["valid"]:
         raise HTTPException(status_code=409, detail=result)
     return result
 
-@router.get("/filter-events/export")
+@router.get("/audit/filter-events/export")
 def export_filter_audit_logs(
     screen: str = Query(...),
     from_ts: datetime = Query(...),

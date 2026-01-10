@@ -1,3 +1,4 @@
+import { apiFetch } from "@/lib/api"
 
 export type DashboardSummary = {
     totalProcedures: number;
@@ -13,49 +14,35 @@ export type DashboardResult =
     | { status: "offline"; reason: string; data: null };
 
 export async function getDashboardSummary(): Promise<DashboardResult> {
-    try {
-        const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
-        const res = await fetch(`${API_URL}/dashboard/summary`, {
-            cache: "no-store",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
+    const { data, error, status } = await apiFetch("/dashboard/summary");
 
-        if (!res.ok) {
-            return {
-                status: "error",
-                reason: `HTTP_${res.status}`,
-                data: null,
-            }
-        }
-
-        const rawData = await res.json()
-
-        // Map backend snake_case to frontend camelCase
-        const data: DashboardSummary = {
-            totalProcedures: rawData.total_procedures,
-            totalBatches: rawData.total_batches,
-            completedBatches: rawData.completed_batches,
-            violatedBatches: rawData.violated_batches,
-            mode: rawData.mode,
-        };
-
-        return {
-            status: "ok",
-            data,
-        }
-    } catch (err) {
-        console.error("Dashboard fetch failed", {
-            error: err,
-            service: "dashboard-summary",
-            time: new Date().toISOString(),
-        })
-
+    if (status === 503 || error === "circuit_open" || error === "network_failure") {
         return {
             status: "offline",
             reason: "network_failure",
             data: null,
         }
+    }
+
+    if (error || !data) {
+        return {
+            status: "error",
+            reason: error || `HTTP_${status}`,
+            data: null,
+        }
+    }
+
+    // Map backend snake_case to frontend camelCase
+    const summary: DashboardSummary = {
+        totalProcedures: data.total_procedures,
+        totalBatches: data.total_batches,
+        completedBatches: data.completed_batches,
+        violatedBatches: data.violated_batches,
+        mode: data.mode,
+    };
+
+    return {
+        status: "ok",
+        data: summary,
     }
 }

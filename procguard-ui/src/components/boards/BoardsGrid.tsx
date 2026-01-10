@@ -92,23 +92,8 @@ export default function BoardsGrid({ stats }: BoardsGridProps) {
     }
 
     // Map Backend stats to Board instances (Command Architecture)
-    const displayBoards = boards.map(b => {
-        if (!b.isSystem) return { ...b, primaryCount: 0, secondaryCount: 0 };
-
-        // System Board Mapping Logic
-        switch (b.title) {
-            case "Procedure":
-                return { ...b, primaryLabel: "Active", primaryCount: stats.totalProcedures, secondaryLabel: "Pending", secondaryCount: 0 };
-            case "Batch State":
-                return { ...b, primaryLabel: "Total", primaryCount: stats.totalBatches, secondaryLabel: "Completed", secondaryCount: stats.completedBatches };
-            case "Violation":
-                return { ...b, primaryLabel: "Violated", primaryCount: stats.violatedBatches, secondaryLabel: "Resolved", secondaryCount: 0 };
-            case "Audit Evidence":
-                return { ...b, primaryLabel: "Items", primaryCount: 0, secondaryLabel: "Reviews", secondaryCount: 0, locked: true };
-            default:
-                return { ...b, primaryCount: 0, secondaryCount: 0 };
-        }
-    });
+    // PHASE 2 FIX: Use backend authoritative data. No frontend hardcoding.
+    const displayBoards = boards;
 
     return (
         <div className="mb-8 bg-slate-50 p-6 rounded-xl border border-slate-200">

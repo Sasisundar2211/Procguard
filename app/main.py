@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-from app.api import batches, events, procedures, audit_timeline, compliance
+from app.api import batches, events, procedures, audit_timeline, compliance, boards
 from app.api import regulatory_audit as audit, violations, opa, dashboard, execution_routes, evidence
 from app.core.database import engine, init_db
 from app.models.base import Base
@@ -19,23 +19,33 @@ async def lifespan(app: FastAPI):
     init_db()
 
     # Step 5: Guarantee a log exists (System Boot)
-    db = SessionLocal()
+    # RESILIENCE FIX: Do not block app startup on DB logging.
+    # If DB is cold/unreachable, log to stderr and continue.
     try:
-        write_audit_log(
-            db=db,
-            action="SYSTEM_BOOT",
-            actor="system",
-            metadata={"version": "1.0.0"}
-        )
-    finally:
-        db.close()
+        db = SessionLocal()
+        try:
+            write_audit_log(
+                db=db,
+                action="SYSTEM_BOOT",
+                actor="system",
+                metadata={"version": "1.0.0"}
+            )
+            # db.commit() is handled by write_audit_log or session manager usually, 
+            # ensuring safety here.
+        except Exception as inner_e:
+             print(f"WARNING: System boot audit log failed to write: {inner_e}")
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"WARNING: System boot audit log connection failed (non-fatal): {e}")
     yield
 
 app = FastAPI(
     title="ProcGuard API",
     description="Immutable Procedure Enforcement",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    root_path="/api" if os.getenv("VERCEL") else ""
 )
 
 @app.get("/")
@@ -74,6 +84,7 @@ app.include_router(compliance.router, prefix="/compliance", tags=["compliance"])
 app.include_router(violations.router)
 app.include_router(opa.router, prefix="/opa", tags=["opa"])
 app.include_router(dashboard.router)
+app.include_router(boards.router, prefix="/boards", tags=["boards"])
 app.include_router(execution_routes.router)
 app.include_router(evidence.router, tags=["evidence"])
 

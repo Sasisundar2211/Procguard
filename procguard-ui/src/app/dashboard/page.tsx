@@ -7,11 +7,11 @@ export const dynamic = "force-dynamic"
 export default async function DashboardPage() {
     const summary = await getDashboardSummary()
 
-    if (summary.status !== "ok") {
-        return <BackendOffline reason={summary.reason} />
-    }
+    // Soft-Fail: If server-side fetch fails, pass null to client wrapper.
+    // Client wrapper will use ApiHealthContext to manage the offline state dynamically.
+    const safeSummary = summary.status === "ok" ? summary.data : null;
 
     return (
-        <DashboardClientWrapper summary={summary.data} />
+        <DashboardClientWrapper summary={safeSummary} />
     )
 }

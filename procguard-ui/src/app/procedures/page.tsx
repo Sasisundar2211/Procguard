@@ -1,10 +1,22 @@
 import ProcedurePanel from "@/components/procedure/ProcedurePanel"
 import { getProcedures } from "@/domain/procedure"
 
+import BackendOffline from "@/components/common/BackendOffline"
+
 export const dynamic = "force-dynamic"
 
 export default async function ProcedurePage() {
-    const procedures = await getProcedures()
+    const result = await getProcedures()
+
+    if (result.status !== "ok") {
+        return (
+            <div className="font-sans max-w-[1600px] mx-auto p-8">
+                <BackendOffline reason={result.reason} />
+            </div>
+        )
+    }
+
+    const procedures = result.data || []
 
     return (
         <div className="font-sans max-w-[1600px] mx-auto p-8">

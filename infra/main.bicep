@@ -2,11 +2,12 @@ targetScope = 'resourceGroup'
 
 param location string = resourceGroup().location
 param adminPassword string
+param registryPassword string
 
 module storage 'storage.bicep' = {
   name: 'storage-deploy'
   params: {
-    location: location
+  location: location
   }
 }
 
@@ -24,5 +25,7 @@ module containerApp 'container.bicep' = {
     location: location
     dbHost: postgres.outputs.host
     storageAccountName: storage.outputs.accountName
+    registryPassword: registryPassword
+    adminPassword: adminPassword
   }
 }

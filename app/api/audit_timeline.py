@@ -276,16 +276,19 @@ def get_audit_timeline(
     
         # Layer 2: Cache Authoritative State (Snapshot) & Checkpoint
         try:
-            # Atomic Delete (Force synchronous delete to prevent race conditions)
-            db.query(TimelineSnapshot).filter(TimelineSnapshot.batch_id == batch.batch_id).delete(synchronize_session=False)
-            db.flush() 
-
-            snapshot = TimelineSnapshot(
-                batch_id=batch.batch_id,
-                timeline_json=response.model_dump(mode="json"),
-                captured_at=datetime.utcnow()
-            )
-            db.add(snapshot)
+            # Atomic Replacement Strategy (Upsert)
+            existing = db.query(TimelineSnapshot).filter(TimelineSnapshot.batch_id == batch.batch_id).first()
+            
+            if existing:
+                existing.timeline_json = response.model_dump(mode="json")
+                existing.captured_at = datetime.utcnow()
+            else:
+                snapshot = TimelineSnapshot(
+                    batch_id=batch.batch_id,
+                    timeline_json=response.model_dump(mode="json"),
+                    captured_at=datetime.utcnow()
+                )
+                db.add(snapshot)
             
             # Authoritative Sync Checkpoint
             sync_manager.create_checkpoint(

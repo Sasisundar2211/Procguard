@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+"use client";
+
+import React, { useState, Fragment } from "react";
 
 interface EmailModalProps {
     isOpen: boolean;
