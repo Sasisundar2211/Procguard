@@ -10,6 +10,27 @@ ProcGuard is a full-stack application for immutable procedure enforcement with c
 
 ## 🚀 Quick Start
 
+### Full Deployment (Frontend + Backend Together)
+
+Deploy both frontend and backend as a unified application using Docker Compose:
+
+```bash
+# Make deployment script executable
+chmod +x deploy.sh
+
+# Deploy locally
+./deploy.sh --mode local
+```
+
+This will start:
+- Frontend at http://localhost:3000
+- Backend API at http://localhost:8000
+- PostgreSQL database at localhost:5432
+
+📖 **[QUICKSTART.md](./QUICKSTART.md)** - Get started in 5 minutes!
+
+📖 **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete deployment guide
+
 ### Local Development (Separate Services)
 
 1. **Backend**
@@ -31,6 +52,8 @@ ProcGuard is a full-stack application for immutable procedure enforcement with c
    ```
 
    Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+> **Note**: For deploying both services together, see [QUICKSTART.md](./QUICKSTART.md)
 
 ### Full Deployment (Frontend + Backend Together)
 
