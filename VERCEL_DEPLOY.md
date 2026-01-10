@@ -22,12 +22,12 @@ Ensure your project matches this structure (already configured):
 ### Step A: Import Project in Vercel
 1.  Go to **Vercel Dashboard** > **Add New...** > **Project**.
 2.  Import your GitHub Repository.
-3.  **IMPORTANT**: Leave "Root Directory" as `./` (the default). Do **NOT** select `procguard-ui`. We are deploying the whole repo.
+3.  **IMPORTANT**: Delete everything in the "Root Directory" text box. Make it completely empty. Do **NOT** select `procguard-ui`. We are deploying the whole repo.
 
 ### Step B: Configure Build Settings
 Vercel reads `vercel.json`, so it generally knows what to do. However, verify:
 *   **Framework Preset**: Select "Other" or leave default (Next.js might be auto-detected, but we are overriding via `vercel.json`).
-*   **Root Directory**: `.`
+*   **Root Directory**: (leave empty)
 
 ### Step C: Environment Variables (CRITICAL)
 Add the following variables in the Vercel Project Settings:
