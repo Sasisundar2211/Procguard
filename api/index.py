@@ -6,3 +6,5 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from app.main import app
 
+# Export app as handler for Vercel serverless functions
+handler = app
